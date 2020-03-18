@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://code.alibabatech.com/schema/dubbo
+    http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--注意：port ，消费者 ，提供者的顺序不要变-->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181" timeout="60000"/>
+    <!-- port值-1 表示让dubbo自行找一个可用的port -->
+    <dubbo:protocol port="-1" name="dubbo"/>
+    <dubbo:application name="provider"/>
+
+    <!--消费者-->
+    <!--关闭服务消费方所有服务的启动检查。dubbo缺省会在启动时检查依赖的服务是否可用，不可用时会抛出异常，
+    阻止Spring初始化完成。url="dubbo//172.16.1.112:20880"-->
+    <dubbo:consumer check="false" />
+    <!--reference 采用xml配置实现,在代码中获取远程服务需要加注解@Autowired-->
+    <dubbo:reference id="userService" check="false"  interface="com.czkj.dubbo.api.service.UserService"/>
+    <dubbo:reference id="calculateService" check="false"  interface="com.czkj.dubbo.api.service.CalculateService"/>
+    <dubbo:annotation package="com.czkj.dubbo.provider.service.*"/>
+</beans>
